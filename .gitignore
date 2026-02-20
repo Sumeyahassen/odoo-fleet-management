@@ -1,0 +1,30 @@
+# Byte-compiled files
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Database files
+*.db
+*.sqlite3
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Odoo specific
+*.log
+*.pid
+*.sock
+filestore/
+dump.rdb
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
