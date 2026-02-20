@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List/Tree View -->
+    <record id="view_fleet_trip_tree" model="ir.ui.view">
+        <field name="name">fleet.trip.tree</field>
+        <field name="model">fleet.trip</field>
+        <field name="arch" type="xml">
+            <tree string="Trips" default_order="start_date desc">
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="distance" sum="Total Distance"/>
+                <field name="state" widget="badge" decoration-success="state == 'completed'" decoration-warning="state == 'in_progress'" decoration-info="state == 'planned'" decoration-danger="state == 'cancelled'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_fleet_trip_form" model="ir.ui.view">
+        <field name="name">fleet.trip.form</field>
+        <field name="model">fleet.trip</field>
+        <field name="arch" type="xml">
+            <form string="Trip">
+                <header>
+                    <button name="action_start" string="Start Trip" type="object" class="btn-primary" states="planned"/>
+                    <button name="action_complete" string="Complete Trip" type="object" class="btn-success" states="in_progress"/>
+                    <button name="action_cancel" string="Cancel Trip" type="object" class="btn-danger" states="planned,in_progress"/>
+                    <field name="state" widget="statusbar" statusbar_visible="planned,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="vehicle_id" options="{'no_create': True}" required="1"/>
+                            <field name="driver_id" options="{'no_create': True}"/>
+                            <field name="purpose"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="start_odometer"/>
+                            <field name="end_odometer"/>
+                            <field name="distance"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_fleet_trip_search" model="ir.ui.view">
+        <field name="name">fleet.trip.search</field>
+        <field name="model">fleet.trip</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <filter name="planned" string="Planned" domain="[('state','=','planned')]"/>
+                <filter name="in_progress" string="In Progress" domain="[('state','=','in_progress')]"/>
+                <filter name="completed" string="Completed" domain="[('state','=','completed')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_vehicle" string="Vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by':'state'}"/>
+                    <filter name="group_date" string="Start Date" context="{'group_by':'start_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action to open trips -->
+    <record id="action_fleet_trip" model="ir.actions.act_window">
+        <field name="name">Trips</field>
+        <field name="res_model">fleet.trip</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first trip!
+            </p>
+            <p>
+                Track all vehicle trips including start/end locations, odometer readings, and driver assignments.
+            </p>
+        </field>
+    </record>
+
+    <!-- Add menu item under Fleet -->
+    <menuitem id="menu_fleet_trip" 
+              name="Trips" 
+              parent="fleet.fleet_menu" 
+              action="action_fleet_trip" 
+              sequence="5"/>
+</odoo>
